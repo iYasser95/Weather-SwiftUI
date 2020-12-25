@@ -17,6 +17,8 @@
 		18250C6425969A3700EF8628 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18250C6325969A3700EF8628 /* BackgroundView.swift */; };
 		18250C6725969A4A00EF8628 /* WeatherDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18250C6625969A4A00EF8628 /* WeatherDayView.swift */; };
 		18250C6A25969A5C00EF8628 /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18250C6925969A5C00EF8628 /* WeatherView.swift */; };
+		18250C6D2596A34100EF8628 /* WeatherObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18250C6C2596A34100EF8628 /* WeatherObject.swift */; };
+		18250C712596A5D300EF8628 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18250C702596A5D300EF8628 /* Constant.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		18250C6325969A3700EF8628 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		18250C6625969A4A00EF8628 /* WeatherDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDayView.swift; sourceTree = "<group>"; };
 		18250C6925969A5C00EF8628 /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
+		18250C6C2596A34100EF8628 /* WeatherObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherObject.swift; sourceTree = "<group>"; };
+		18250C702596A5D300EF8628 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,7 @@
 		18250C4525967FCF00EF8628 /* Weather-SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				18250C6F2596A5BC00EF8628 /* Constant */,
 				18250C5B259699F800EF8628 /* Views */,
 				18250C4625967FCF00EF8628 /* Weather_SwiftUIApp.swift */,
 				18250C4825967FCF00EF8628 /* ContentView.swift */,
@@ -93,6 +98,15 @@
 				18250C6925969A5C00EF8628 /* WeatherView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		18250C6F2596A5BC00EF8628 /* Constant */ = {
+			isa = PBXGroup;
+			children = (
+				18250C6C2596A34100EF8628 /* WeatherObject.swift */,
+				18250C702596A5D300EF8628 /* Constant.swift */,
+			);
+			path = Constant;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,6 +186,8 @@
 				18250C4725967FCF00EF8628 /* Weather_SwiftUIApp.swift in Sources */,
 				18250C58259699C800EF8628 /* WeatherButton.swift in Sources */,
 				18250C6A25969A5C00EF8628 /* WeatherView.swift in Sources */,
+				18250C712596A5D300EF8628 /* Constant.swift in Sources */,
+				18250C6D2596A34100EF8628 /* WeatherObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
