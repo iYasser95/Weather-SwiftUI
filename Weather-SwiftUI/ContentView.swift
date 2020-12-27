@@ -11,7 +11,8 @@ struct ContentView: View {
     @State private var showDetail = false
     @State private var isNight: Bool = false
     @State private var weather = Weather()
-    @State private var selectedCountry: Constant.Countries = .Bahrain
+    @State private var selectedCountry: String = "Manama"
+    @State private var countries = CitiesObject()
     var body: some View {
         NavigationView {
             ZStack {
@@ -20,7 +21,7 @@ struct ContentView: View {
                     .onAppear(perform: getTime)
                 VStack {
                     let imageName = isNight ? "moon.stars.fill" : "cloud.sun.fill"
-                    CityTextView(cityName: selectedCountry.cityName)
+                    CityTextView(cityName: selectedCountry)
                     WeatherStatusView(imageName: imageName,
                                       temperature: weather.temp,
                                       max: weather.max,
@@ -96,18 +97,26 @@ struct ContentView_Previews: PreviewProvider {
 
 struct ListView: View {
     @Binding var showDetail: Bool
-    @Binding var selectedCountry: Constant.Countries
-    let countryList: [CountriesList] = Constant.getCountries()
-
+    @Binding var selectedCountry: String
+    @State private var country: CitiesObject = CitiesObject()
     var body: some View {
+        VStack {
+            Text("Enter country name")
             HStack {
                 Row(showSelf: $showDetail, selectedCountry: $selectedCountry)
                     .navigationTitle("Choose a Country")
             }.background(Color.clear)
+        }
+
+            
     }
 }
 
-
+extension String {
+    var removeWhiteSpace: String {
+       return self.replacingOccurrences(of: " ", with: "")
+    }
+}
 
 
 
