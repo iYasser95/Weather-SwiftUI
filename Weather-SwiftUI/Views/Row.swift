@@ -12,7 +12,7 @@ struct Row: View {
     @State private var countryList = CitiesObject()
     @Binding var searchText: String
     var body: some View {
-        let filteredList = countryList.filter { $0.name?.contains(searchText) ?? false}
+        let filteredList = countryList.filter { $0.name?.lowercased().contains(searchText.lowercased()) ?? false}
         return List(filteredList) { country in
             Button(action: {
                 self.showSelf = false
