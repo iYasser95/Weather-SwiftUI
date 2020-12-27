@@ -8,51 +8,66 @@
 import SwiftUI
 
 struct ContentView: View {
-    
+    @State private var showDetail = false
     @State private var isNight: Bool = false
     @State private var weather = Weather()
+    @State private var selectedCountry: Constant.Countries = .Bahrain
     var body: some View {
-        ZStack {
-            BackgroundView(isNight: $isNight)
-                .onAppear(perform: loadData)
-            VStack {
-                let imageName = isNight ? "moon.stars.fill" : "cloud.sun.fill"
-                CityTextView(cityName: "Manama, BH")
-                WeatherStatusView(imageName: imageName,
-                                  temperature: weather.temp,
-                                  max: weather.max,
-                                  min: weather.min)
+        NavigationView {
+            ZStack {
+                BackgroundView(isNight: $isNight)
+                    .onAppear(perform: loadData)
+                    .onAppear(perform: getTime)
+                VStack {
+                    let imageName = isNight ? "moon.stars.fill" : "cloud.sun.fill"
+                    CityTextView(cityName: selectedCountry.cityName)
+                    WeatherStatusView(imageName: imageName,
+                                      temperature: weather.temp,
+                                      max: weather.max,
+                                      min: weather.min)
+                        
+                    .padding(.bottom, 40)
+                    HStack(spacing: 20) {
+                        WeatherDayView(title: "Feels Like",
+                                       description: "\(weather.feels)°")
+                        
+                        WeatherDayView(title: "Humidity",
+                                       description: "\(weather.humidity)%")
+                        
+                        WeatherDayView(title: "Pressure",
+                                       description: "\(weather.pressure) hPa")
+                        
+                    }
+                    Spacer()
                     
-                .padding(.bottom, 40)
-                HStack(spacing: 20) {
-                    WeatherDayView(title: "Feels Like",
-                                   description: "\(weather.feels)°")
+                    NavigationLink(destination: ListView(showDetail: $showDetail, selectedCountry: $selectedCountry), isActive: $showDetail) {
+                        let textColor: Color = isNight ? .black : .blue
+                        WeatherButton(title: "Change Country",
+                                      textColor: textColor,
+                                      backgroundColor: .white)
+                    }
                     
-                    WeatherDayView(title: "Humidity",
-                                   description: "\(weather.humidity)%")
-                    
-                    WeatherDayView(title: "Pressure",
-                                   description: "\(weather.pressure) hPa")
+                    Spacer()
                     
                 }
-                Spacer()
-                
-                Button {
-                    isNight.toggle()
-                } label: {
-                    WeatherButton(title: "Change Day Time",
-                                  textColor: .blue,
-                                  backgroundColor: .white)
-                }
-                
-                Spacer()
-                
             }
         }
+
+    }
+    
+    func getTime() {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5...18:
+            self.isNight = false
+        default:
+            self.isNight = true
+        }
+        
     }
     
     func loadData() {
-        guard let url = URL(string: Constant.url) else { return }
+        guard let url = URL(string: Constant.getUrl(for: selectedCountry)) else { return }
         let request = URLRequest(url: url)
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
@@ -79,14 +94,24 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
+struct ListView: View {
+    @Binding var showDetail: Bool
+    @Binding var selectedCountry: Constant.Countries
+    let countryList: [CountriesList] = Constant.getCountries()
 
-struct Weather {
-    var temp: Int = 0
-    var feels: Double = 0
-    var min: Int = 0
-    var max: Int = 0
-    var pressure: Int = 0
-    var humidity: Int = 0
+    var body: some View {
+        NavigationView {
+            HStack {
+                Row(showSelf: $showDetail, selectedCountry: $selectedCountry)
+            }.background(Color.clear)
+        }.navigationTitle("Choose a Country")
+    }
 }
+
+
+
+
+
+
 
 
