@@ -43,7 +43,7 @@ struct ContentView: View {
                     
                     NavigationLink(destination: ListView(showDetail: $showDetail, selectedCountry: $selectedCountry), isActive: $showDetail) {
                         let textColor: Color = isNight ? .black : .blue
-                        WeatherButton(title: "Change Country",
+                        WeatherButton(title: "Change City",
                                       textColor: textColor,
                                       backgroundColor: .white)
                     }
