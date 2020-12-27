@@ -11,7 +11,8 @@ struct ContentView: View {
     @State private var showDetail = false
     @State private var isNight: Bool = false
     @State private var weather = Weather()
-    @State private var selectedCountry: Constant.Countries = .Bahrain
+    @State private var selectedCountry: String = "Manama"
+    @State private var countries = CitiesObject()
     var body: some View {
         NavigationView {
             ZStack {
@@ -20,7 +21,7 @@ struct ContentView: View {
                     .onAppear(perform: getTime)
                 VStack {
                     let imageName = isNight ? "moon.stars.fill" : "cloud.sun.fill"
-                    CityTextView(cityName: selectedCountry.cityName)
+                    CityTextView(cityName: selectedCountry)
                     WeatherStatusView(imageName: imageName,
                                       temperature: weather.temp,
                                       max: weather.max,
@@ -96,18 +97,55 @@ struct ContentView_Previews: PreviewProvider {
 
 struct ListView: View {
     @Binding var showDetail: Bool
-    @Binding var selectedCountry: Constant.Countries
-    let countryList: [CountriesList] = Constant.getCountries()
-
+    @Binding var selectedCountry: String
+    @State private var country: CitiesObject = Constant.getAllCities()
+    @State var searchText: String = ""
+    @State var isEmpty: Bool = true
+    
     var body: some View {
+        VStack {
+            TextField("Please Enter City Name", text: $searchText)
+                .padding(7)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding([.leading, .trailing], 15)
             HStack {
-                Row(showSelf: $showDetail, selectedCountry: $selectedCountry)
-                    .navigationTitle("Choose a Country")
+                if searchText.isEmpty || country.filter { ($0.name?.contains(searchText) ?? false)}.isEmpty {
+                    VStack(spacing: 20) {
+                        Image("warning")
+                            .renderingMode(.original)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100, alignment: .center)
+                            .padding(.top, 200)
+                        Text("Sorry, no search results")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.gray)
+                            
+                        Spacer()
+                    }.navigationTitle("Search a City")
+
+                }else {
+                    Row(showSelf: $showDetail, selectedCountry: $selectedCountry, searchText: $searchText)
+                            .navigationTitle("Choose a City")
+                }
+
             }.background(Color.clear)
+        }
+
+            
+    }
+    
+    func checkSearch() {
+        self.isEmpty = searchText.isEmpty
     }
 }
 
-
+extension String {
+    var removeWhiteSpace: String {
+       return self.replacingOccurrences(of: " ", with: "")
+    }
+}
 
 
 
