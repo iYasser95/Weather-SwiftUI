@@ -46,9 +46,9 @@ extension WeatherObject {
 
 // MARK: - Main
 struct Main: Codable {
-    let temp: Int?
+    let temp: Double?
     let feelsLike: Double?
-    let tempMin, tempMax, pressure, humidity: Int?
+    let tempMin, tempMax, pressure, humidity: Double?
 
     enum CodingKeys: String, CodingKey {
         case temp
@@ -78,12 +78,12 @@ extension Main {
     }
 
     func with(
-        temp: Int?? = nil,
+        temp: Double?? = nil,
         feelsLike: Double?? = nil,
-        tempMin: Int?? = nil,
-        tempMax: Int?? = nil,
-        pressure: Int?? = nil,
-        humidity: Int?? = nil
+        tempMin: Double?? = nil,
+        tempMax: Double?? = nil,
+        pressure: Double?? = nil,
+        humidity: Double?? = nil
     ) -> Main {
         return Main(
             temp: temp ?? self.temp,

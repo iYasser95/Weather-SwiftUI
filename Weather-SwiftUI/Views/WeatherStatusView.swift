@@ -9,23 +9,26 @@ import SwiftUI
 
 struct WeatherStatusView: View {
     var imageName: String
-    var temperature: Int
-    var max: Int
-    var min: Int
+    var temperature: Double
+    var max: Double
+    var min: Double
     var body: some View {
+        let temp = String(format: "%.2f", temperature)
+        let maxTemp = String(format: "%.2f", max)
+        let minTemp = String(format: "%.2f", min)
         VStack(spacing: 8) {
             Image(systemName: imageName)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 180, height: 180)
-            Text("\(temperature)°")
+            Text(temp)
                 .font(.system(size: 70, weight: .medium))
                 .foregroundColor(.white)
             HStack {
-                Text("H:\(max)")
+                Text("H:\(maxTemp)")
                     .foregroundColor(.white)
-                Text("L:\(min)")
+                Text("L:\(minTemp)")
                     .foregroundColor(.white)
             }
             
