@@ -99,16 +99,26 @@ struct ListView: View {
     @Binding var showDetail: Bool
     @Binding var selectedCountry: String
     @State private var country: CitiesObject = CitiesObject()
+    @State var searchText: String = ""
+    @State var isEmpty: Bool = true
     var body: some View {
         VStack {
-            Text("Enter country name")
+            TextField("Please Enter City Name", text: $searchText)
+                .padding(7)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding([.leading, .trailing], 15)
             HStack {
-                Row(showSelf: $showDetail, selectedCountry: $selectedCountry)
-                    .navigationTitle("Choose a Country")
+                    Row(showSelf: $showDetail, selectedCountry: $selectedCountry, searchText: $searchText)
+                        .navigationTitle("Choose a Country")
             }.background(Color.clear)
         }
 
             
+    }
+    
+    func checkSearch() {
+        self.isEmpty = searchText.isEmpty
     }
 }
 

@@ -10,13 +10,15 @@ struct Row: View {
     @Binding var showSelf: Bool
     @Binding var selectedCountry: String
     @State private var countryList = CitiesObject()
+    @Binding var searchText: String
     var body: some View {
-       return List(countryList) { country in
+        let filteredList = countryList.filter { $0.name?.contains(searchText) ?? false}
+        return List(filteredList) { country in
             Button(action: {
                 self.showSelf = false
                 self.selectedCountry = country.name ?? ""
-                
             }) {
+                
                 VStack() {
                     HStack() {
                         Text(country.name ?? "")
