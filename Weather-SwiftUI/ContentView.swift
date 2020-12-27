@@ -98,9 +98,10 @@ struct ContentView_Previews: PreviewProvider {
 struct ListView: View {
     @Binding var showDetail: Bool
     @Binding var selectedCountry: String
-    @State private var country: CitiesObject = CitiesObject()
+    @State private var country: CitiesObject = Constant.getAllCities()
     @State var searchText: String = ""
     @State var isEmpty: Bool = true
+    
     var body: some View {
         VStack {
             TextField("Please Enter City Name", text: $searchText)
@@ -109,8 +110,26 @@ struct ListView: View {
                 .cornerRadius(8)
                 .padding([.leading, .trailing], 15)
             HStack {
+                if searchText.isEmpty || country.filter { ($0.name?.contains(searchText) ?? false)}.isEmpty {
+                    VStack(spacing: 20) {
+                        Image("warning")
+                            .renderingMode(.original)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100, alignment: .center)
+                            .padding(.top, 200)
+                        Text("Sorry, no search results")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.gray)
+                            
+                        Spacer()
+                    }.navigationTitle("Search a City")
+
+                }else {
                     Row(showSelf: $showDetail, selectedCountry: $selectedCountry, searchText: $searchText)
-                        .navigationTitle("Choose a Country")
+                            .navigationTitle("Choose a City")
+                }
+
             }.background(Color.clear)
         }
 
