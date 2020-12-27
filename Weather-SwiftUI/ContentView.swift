@@ -100,11 +100,10 @@ struct ListView: View {
     let countryList: [CountriesList] = Constant.getCountries()
 
     var body: some View {
-        NavigationView {
             HStack {
                 Row(showSelf: $showDetail, selectedCountry: $selectedCountry)
+                    .navigationTitle("Choose a Country")
             }.background(Color.clear)
-        }.navigationTitle("Choose a Country")
     }
 }
 
