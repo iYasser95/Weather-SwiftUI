@@ -21,6 +21,7 @@ struct ContentView: View {
     @State private var spinner: UIActivityIndicatorView?
     @State private var statusImage: String = ""
     @State private var isConnected: Bool = true
+    @State private var state: String = ""
     var body: some View {
         NavigationView {
             if !isConnected {
@@ -42,7 +43,11 @@ struct ContentView: View {
                     
                 }else {
                     ZStack {
+                        
                         BackgroundView(isNight: $isNight)
+                            .onAppear {
+                                self.statusImage = Constant.shared.getStatusImage(from: state, isNight: isNight)
+                            }
                             
                         VStack {
                             let imageName = statusImage
@@ -102,7 +107,8 @@ struct ContentView: View {
                         if let countryName = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: object.country?.country ?? "") {
                             self.countryName = countryName
                             self.isLoading = false
-                            self.statusImage = Constant.shared.getStatusImage(from: object.status?.first?.main ?? "", isNight: isNight)
+                            self.state = object.status?.first?.main ?? ""
+                            
                             self.getLocal()
 
                         }
