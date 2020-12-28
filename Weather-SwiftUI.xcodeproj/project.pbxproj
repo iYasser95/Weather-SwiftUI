@@ -74,6 +74,7 @@
 		18250C4525967FCF00EF8628 /* Weather-SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				1891775F2599C33200921959 /* Client */,
 				18250C6F2596A5BC00EF8628 /* Constant */,
 				18250C5B259699F800EF8628 /* Views */,
 				188D646F25991DA700A82E76 /* data.json */,
@@ -111,11 +112,18 @@
 		18250C6F2596A5BC00EF8628 /* Constant */ = {
 			isa = PBXGroup;
 			children = (
-				18250C6C2596A34100EF8628 /* WeatherObject.swift */,
 				18250C702596A5D300EF8628 /* Constant.swift */,
-				188D647225991DBC00A82E76 /* CitiesObject.swift */,
 			);
 			path = Constant;
+			sourceTree = "<group>";
+		};
+		1891775F2599C33200921959 /* Client */ = {
+			isa = PBXGroup;
+			children = (
+				18250C6C2596A34100EF8628 /* WeatherObject.swift */,
+				188D647225991DBC00A82E76 /* CitiesObject.swift */,
+			);
+			path = Client;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
