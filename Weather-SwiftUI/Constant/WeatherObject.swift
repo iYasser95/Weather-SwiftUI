@@ -7,7 +7,15 @@ import Foundation
 
 // MARK: - WeatherObject
 struct WeatherObject: Codable {
-    let main: Main?
+    let weather: Weather?
+    let country: Country?
+    let timezone: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case weather = "main"
+        case country = "sys"
+        case timezone
+    }
 }
 
 // MARK: WeatherObject convenience initializers and mutators
@@ -28,8 +36,10 @@ extension WeatherObject {
         try self.init(data: try Data(contentsOf: url))
     }
 
-    func with(main: Main?? = nil) -> WeatherObject {
-        return WeatherObject(main: main ?? self.main)
+    func with(main: Weather?? = nil) -> WeatherObject {
+        return WeatherObject(weather: weather ?? self.weather,
+                             country: country ?? self.country,
+                             timezone: timezone ?? self.timezone)
     }
 
     func jsonData() throws -> Data {
@@ -41,11 +51,8 @@ extension WeatherObject {
     }
 }
 
-
-
-
 // MARK: - Main
-struct Main: Codable {
+struct Weather: Codable {
     let temp: Double?
     let feelsLike: Double?
     let tempMin, tempMax, pressure, humidity: Double?
@@ -61,9 +68,9 @@ struct Main: Codable {
 
 // MARK: Main convenience initializers and mutators
 
-extension Main {
+extension Weather {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(Main.self, from: data)
+        self = try newJSONDecoder().decode(Weather.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -84,14 +91,64 @@ extension Main {
         tempMax: Double?? = nil,
         pressure: Double?? = nil,
         humidity: Double?? = nil
-    ) -> Main {
-        return Main(
+    ) -> Weather {
+        return Weather(
             temp: temp ?? self.temp,
             feelsLike: feelsLike ?? self.feelsLike,
             tempMin: tempMin ?? self.tempMin,
             tempMax: tempMax ?? self.tempMax,
             pressure: pressure ?? self.pressure,
             humidity: humidity ?? self.humidity
+        )
+    }
+
+    func jsonData() throws -> Data {
+        return try newJSONEncoder().encode(self)
+    }
+
+    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
+        return String(data: try self.jsonData(), encoding: encoding)
+    }
+}
+
+
+struct Country: Codable {
+    let type, id: Int?
+    let sunrise, sunset: Int?
+    let country: String?
+}
+
+// MARK: Main convenience initializers and mutators
+
+extension Country {
+    init(data: Data) throws {
+        self = try newJSONDecoder().decode(Country.self, from: data)
+    }
+
+    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
+        guard let data = json.data(using: encoding) else {
+            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
+        }
+        try self.init(data: data)
+    }
+
+    init(fromURL url: URL) throws {
+        try self.init(data: try Data(contentsOf: url))
+    }
+
+    func with(
+        type: Int?? = nil,
+        id: Int?? = nil,
+        sunrise: Int?? = nil,
+        sunset: Int?? = nil,
+        country: String?? = nil
+    ) -> Country {
+        return Country(
+            type: type ?? self.type,
+            id: id ?? self.id,
+            sunrise: sunrise ?? self.sunrise,
+            sunset: sunset ?? self.sunset,
+            country: country ?? self.country
         )
     }
 
