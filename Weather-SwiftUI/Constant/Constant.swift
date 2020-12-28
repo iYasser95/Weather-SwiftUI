@@ -27,4 +27,24 @@ class Constant {
         
         return CitiesObject()
     }
+    
+    
+    func getStatusImage(from string: String, isNight: Bool) -> String {
+        let status = string.lowercased()
+        var image: String = ""
+        switch status {
+        case "rain":
+            image = "cloud.rain.fill"
+        case "snow":
+            image = "cloud.snow.fill"
+        case "fog":
+            image = "cloud.fog.fill"
+        case "clouds":
+            image = "cloud.fill"
+        default:
+            image = isNight ? "moon.stars.fill" : "sun.max.fill"
+        }
+        
+        return image
+    }
 }

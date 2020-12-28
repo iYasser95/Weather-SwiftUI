@@ -18,18 +18,12 @@ struct ContentView: View {
     @State private var timezone: Int = 0
     @State private var isLoading: Bool = true
     @State private var spinner: UIActivityIndicatorView?
+    @State private var statusImage: String = ""
     var body: some View {
         NavigationView {
             if isLoading {
-                VStack(spacing: 15) {
-                    ProgressView()
-                        .scaleEffect(CGSize(width: 1.5, height: 1.5))
-                        .onAppear(perform: loadData)
-                    Text("Fetching Weather data...")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.black)
-                }
-
+                LoadingView()
+                    .onAppear(perform: loadData)
                 
             }else {
                 ZStack {
@@ -37,7 +31,7 @@ struct ContentView: View {
                         
                     VStack {
                         
-                        let imageName = isNight ? "moon.stars.fill" : "cloud.sun.fill"
+                        let imageName = statusImage
                         CityTextView(cityName: selectedCountry)
                         Text(countryName)
                             .padding(.top, -25)
@@ -91,6 +85,7 @@ struct ContentView: View {
                         if let countryName = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: object.country?.country ?? "") {
                             self.countryName = countryName
                             self.isLoading = false
+                            self.statusImage = Constant.shared.getStatusImage(from: object.status?.first?.main ?? "", isNight: isNight)
                             self.getLocal()
                         }
                         
