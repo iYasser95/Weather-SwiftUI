@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import Network
 class Constant {
-    public static var url = "https://api.openweathermap.org/data/2.5/weather?q=Kuwait&appid=0173d4ad7d634420fe2a187a24469a93&units=metric"
-    public static func getUrl(for country: String) -> String {
+    static let shared = Constant()
+     var url = "https://api.openweathermap.org/data/2.5/weather?q=Kuwait&appid=0173d4ad7d634420fe2a187a24469a93&units=metric"
+     func getUrl(for country: String) -> String {
         let url = "https://api.openweathermap.org/data/2.5/weather?q=\(country)&appid=0173d4ad7d634420fe2a187a24469a93&units=metric"
         return url
     }
     
-    public static func getAllCities() -> CitiesObject {
+     func getAllCities() -> CitiesObject {
         let url = Bundle.main.url(forResource: "data", withExtension: "json")!
         do {
             let data = try Data(contentsOf: url)
@@ -25,5 +27,25 @@ class Constant {
         }
         
         return CitiesObject()
+    }
+    
+    
+    func getStatusImage(from string: String, isNight: Bool) -> String {
+        let status = string.lowercased()
+        var image: String = ""
+        switch status {
+        case "rain":
+            image = "cloud.rain.fill"
+        case "snow":
+            image = "cloud.snow.fill"
+        case "fog":
+            image = "cloud.fog.fill"
+        case "clouds":
+            image = "cloud.fill"
+        default:
+            image = isNight ? "moon.stars.fill" : "sun.max.fill"
+        }
+        
+        return image
     }
 }

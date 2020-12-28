@@ -10,11 +10,13 @@ struct WeatherObject: Codable {
     let weather: Weather?
     let country: Country?
     let timezone: Int?
+    let status: [Status]?
     
     enum CodingKeys: String, CodingKey {
         case weather = "main"
         case country = "sys"
         case timezone
+        case status = "weather"
     }
 }
 
@@ -39,7 +41,8 @@ extension WeatherObject {
     func with(main: Weather?? = nil) -> WeatherObject {
         return WeatherObject(weather: weather ?? self.weather,
                              country: country ?? self.country,
-                             timezone: timezone ?? self.timezone)
+                             timezone: timezone ?? self.timezone,
+                             status: status ?? self.status)
     }
 
     func jsonData() throws -> Data {
@@ -161,6 +164,53 @@ extension Country {
     }
 }
 
+
+
+struct Status: Codable {
+    let id: Int?
+    let main, description: String?
+    let icon: String?
+}
+
+// MARK: Main convenience initializers and mutators
+
+extension Status {
+    init(data: Data) throws {
+        self = try newJSONDecoder().decode(Status.self, from: data)
+    }
+
+    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
+        guard let data = json.data(using: encoding) else {
+            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
+        }
+        try self.init(data: data)
+    }
+
+    init(fromURL url: URL) throws {
+        try self.init(data: try Data(contentsOf: url))
+    }
+
+    func with(
+        main: String?? = nil,
+        id: Int?? = nil,
+        description: String?? = nil,
+        icon: String?? = nil
+    ) -> Status {
+        return Status(
+            id: id ?? self.id, main: main ?? self.main,
+            description: description ?? self.description,
+            icon: icon ?? self.icon
+        )
+    }
+
+    func jsonData() throws -> Data {
+        return try newJSONEncoder().encode(self)
+    }
+
+    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
+        return String(data: try self.jsonData(), encoding: encoding)
+    }
+}
 
 
 // MARK: - Helper functions for creating encoders and decoders
