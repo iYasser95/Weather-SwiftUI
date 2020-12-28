@@ -108,7 +108,6 @@ struct ContentView: View {
                             self.countryName = countryName
                             self.isLoading = false
                             self.state = object.status?.first?.main ?? ""
-                            
                             self.getLocal()
 
                         }
@@ -160,54 +159,6 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct ListView: View {
-    @Binding var showDetail: Bool
-    @Binding var selectedCountry: String
-    @State private var country: CitiesObject = Constant.shared.getAllCities()
-    @State var searchText: String = ""
-    @State var isEmpty: Bool = true
-    @Binding var isLoading: Bool
-    var body: some View {
-        VStack {
-            TextField("Please Enter City Name", text: $searchText)
-                .padding(7)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding([.leading, .trailing], 15)
-            HStack {
-                if searchText.isEmpty || country.filter { ($0.name?.contains(searchText) ?? false)}.isEmpty {
-                    ErrorView(image: "warning", text: "Sorry, no search results")
-                        .navigationTitle("Search a City")
-                }else {
-                    Row(showSelf: $showDetail, selectedCountry: $selectedCountry, searchText: $searchText, isLoading: $isLoading)
-                            .navigationTitle("Choose a City")
-                }
 
-            }.background(Color.clear)
-        }
 
-            
-    }
-    
-    func checkSearch() {
-        self.isEmpty = searchText.isEmpty
-    }
-}
 
-extension String {
-    var removeWhiteSpace: String {
-       return self.replacingOccurrences(of: " ", with: "")
-    }
-    
-    var formattedDate: String {
-        var dateAsString = String(self.components(separatedBy: "GMT").first ?? "")
-        dateAsString = dateAsString.replacingOccurrences(of: "PM", with: "")
-        dateAsString = dateAsString.replacingOccurrences(of: "AM", with: "")
-        return self.removeWhiteSpace
-    }
-    
-    var hour: String {
-        let formatted = self.components(separatedBy: ":")
-        return formatted.first ?? ""
-    }
-}
