@@ -27,19 +27,3 @@ class Constant {
         return CitiesObject()
     }
 }
-
-struct CountriesList: Identifiable {
-    var id: String
-    var name: String
-    var city: String
-}
-
-
-struct Weather {
-    var temp: Double = 0
-    var feels: Double = 0
-    var min: Double = 0
-    var max: Double = 0
-    var pressure: Double = 0
-    var humidity: Double = 0
-}

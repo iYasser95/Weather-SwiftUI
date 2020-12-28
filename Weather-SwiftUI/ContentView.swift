@@ -10,33 +10,39 @@ import SwiftUI
 struct ContentView: View {
     @State private var showDetail = false
     @State private var isNight: Bool = false
-    @State private var weather = Weather()
+    @State private var weather: Weather?
     @State private var selectedCountry: String = "Manama"
     @State private var countries = CitiesObject()
+    @State private var country: Country?
+    @State private var countryName: String = "Bahrain"
+    @State private var timezone: Int = 0
     var body: some View {
         NavigationView {
             ZStack {
                 BackgroundView(isNight: $isNight)
                     .onAppear(perform: loadData)
-                    .onAppear(perform: getTime)
                 VStack {
                     let imageName = isNight ? "moon.stars.fill" : "cloud.sun.fill"
                     CityTextView(cityName: selectedCountry)
+                    Text(countryName)
+                        .padding(.top, -25)
+                        .font(.system(size: 18, weight: .medium, design: .default))
+                        .foregroundColor(.white)
                     WeatherStatusView(imageName: imageName,
-                                      temperature: weather.temp,
-                                      max: weather.max,
-                                      min: weather.min)
+                                      temperature: weather?.temp ?? 0,
+                                      max: weather?.tempMax ?? 0,
+                                      min: weather?.tempMin ?? 0)
                         
                     .padding(.bottom, 40)
                     HStack(spacing: 20) {
                         WeatherDayView(title: "Feels Like",
-                                       description: "\(weather.feels)°")
+                                       description: "\(weather?.feelsLike ?? 0)°")
                         
                         WeatherDayView(title: "Humidity",
-                                       description: "\(weather.humidity)%")
+                                       description: "\(weather?.humidity ?? 0)%")
                         
                         WeatherDayView(title: "Pressure",
-                                       description: "\(weather.pressure) hPa")
+                                       description: "\(weather?.pressure ?? 0) hPa")
                         
                     }
                     Spacer()
@@ -56,17 +62,6 @@ struct ContentView: View {
 
     }
     
-    func getTime() {
-        let hour = Calendar.current.component(.hour, from: Date())
-        switch hour {
-        case 5...18:
-            self.isNight = false
-        default:
-            self.isNight = true
-        }
-        
-    }
-    
     func loadData() {
         guard let url = URL(string: Constant.getUrl(for: selectedCountry)) else { return }
         let request = URLRequest(url: url)
@@ -74,18 +69,30 @@ struct ContentView: View {
             if let data = data {
                 if let object = try? JSONDecoder().decode(WeatherObject.self, from: data) {
                     DispatchQueue.main.async {
-                        self.weather.temp = object.main?.temp ?? 0
-                        self.weather.feels = object.main?.feelsLike ?? 0
-                        self.weather.min = object.main?.tempMin ?? 0
-                        self.weather.max = object.main?.tempMax ?? 0
-                        self.weather.pressure = object.main?.pressure ?? 0
-                        self.weather.humidity = object.main?.humidity ?? 0
+                        self.weather = object.weather
+                        self.country = object.country
+                        self.timezone = object.timezone ?? 0
+                        if let countryName = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: object.country?.country ?? "") {
+                            self.countryName = countryName
+                            self.getLocal()
+                        }
                         
                     }
                     return
                 }
             }
         }.resume()
+    }
+    
+    
+    func getLocal() {
+        let timezone = TimeZone(secondsFromGMT: self.timezone)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.timeZone = timezone
+        dateFormatter.timeStyle = .full
+        let date = dateFormatter.string(from: Date())
+        self.isNight = date.contains("PM")
     }
 }
 
