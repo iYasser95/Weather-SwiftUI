@@ -33,7 +33,7 @@ struct ContentView: View {
                                           textColor: .white,
                                           backgroundColor: .gray)
                         }.padding(.top, -350)
-                }                
+                }
             }else {
                 if isLoading {
                     LoadingView()
@@ -140,13 +140,7 @@ struct ContentView: View {
     func checkNetwork()  {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
-            if path.status == .satisfied {
-                print("We're connected!")
-                isConnected = true
-            } else {
-                isConnected = false
-                print("No connection.")
-            }
+        isConnected = path.status == .satisfied
         }
         
         let queue = DispatchQueue(label: "Monitor")
