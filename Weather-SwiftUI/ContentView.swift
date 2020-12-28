@@ -17,11 +17,20 @@ struct ContentView: View {
     @State private var countryName: String = "Bahrain"
     @State private var timezone: Int = 0
     @State private var isLoading: Bool = true
+    @State private var spinner: UIActivityIndicatorView?
     var body: some View {
         NavigationView {
             if isLoading {
-                Text("Loading..")
-                    .onAppear(perform: loadData)
+                VStack(spacing: 15) {
+                    ProgressView()
+                        .scaleEffect(CGSize(width: 1.5, height: 1.5))
+                        .onAppear(perform: loadData)
+                    Text("Fetching Weather data...")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.black)
+                }
+
+                
             }else {
                 ZStack {
                     BackgroundView(isNight: $isNight)
@@ -184,9 +193,3 @@ extension String {
         return formatted.first ?? ""
     }
 }
-
-
-
-
-
-
