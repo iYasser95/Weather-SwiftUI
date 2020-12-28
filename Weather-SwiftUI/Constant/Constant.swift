@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Network
 class Constant {
     static let shared = Constant()
      var url = "https://api.openweathermap.org/data/2.5/weather?q=Kuwait&appid=0173d4ad7d634420fe2a187a24469a93&units=metric"

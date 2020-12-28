@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		181A60C02599E738006FD5C1 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 181A60BF2599E738006FD5C1 /* LoadingView.swift */; };
+		181A60C32599F62E006FD5C1 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 181A60C22599F62E006FD5C1 /* ErrorView.swift */; };
 		18250C4725967FCF00EF8628 /* Weather_SwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18250C4625967FCF00EF8628 /* Weather_SwiftUIApp.swift */; };
 		18250C4925967FCF00EF8628 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18250C4825967FCF00EF8628 /* ContentView.swift */; };
 		18250C4B25967FCF00EF8628 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18250C4A25967FCF00EF8628 /* Assets.xcassets */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		181A60BF2599E738006FD5C1 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		181A60C22599F62E006FD5C1 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		18250C4325967FCF00EF8628 /* Weather-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18250C4625967FCF00EF8628 /* Weather_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather_SwiftUIApp.swift; sourceTree = "<group>"; };
 		18250C4825967FCF00EF8628 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				18250C6925969A5C00EF8628 /* WeatherView.swift */,
 				188D646A25990E6100A82E76 /* Row.swift */,
 				181A60BF2599E738006FD5C1 /* LoadingView.swift */,
+				181A60C22599F62E006FD5C1 /* ErrorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -210,6 +213,7 @@
 				18250C6A25969A5C00EF8628 /* WeatherView.swift in Sources */,
 				188D647325991DBC00A82E76 /* CitiesObject.swift in Sources */,
 				18250C712596A5D300EF8628 /* Constant.swift in Sources */,
+				181A60C32599F62E006FD5C1 /* ErrorView.swift in Sources */,
 				181A60C02599E738006FD5C1 /* LoadingView.swift in Sources */,
 				18250C6D2596A34100EF8628 /* WeatherObject.swift in Sources */,
 			);
