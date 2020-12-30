@@ -10,14 +10,14 @@ class WeatherClient {
     static let shared = WeatherClient()
     let token = "0173d4ad7d634420fe2a187a24469a93"
     let unit = "metric"
-    func getUrl(for country: String) -> String {
-       let url = "https://api.openweathermap.org/data/2.5/weather?q=\(country)&appid=\(token)&units=\(unit)"
-       return url
-   }
-    
     
     func loadWeatherData(for country: String, completion: @escaping (WeatherObject?, Error?) -> Void) {
-        guard let url = URL(string: getUrl(for: country)) else { return }
+        var urlComponent = URLComponents(string: "https://api.openweathermap.org/data/2.5/weather")
+        urlComponent?.queryItems = [URLQueryItem(name: "q", value: country),
+                                    URLQueryItem(name: "appid", value: token),
+                                    URLQueryItem(name: "units", value: unit)]
+        
+        guard let url = urlComponent?.url else { return }
         let request = URLRequest(url: url)
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
