@@ -12,25 +12,26 @@ struct ContentView: View {
     @State private var showDetail = false
     @State private var isNight: Bool = false
     @State private var weather: Weather?
-    @State private var selectedCountry: String = "Manama"
+    @State private var selectedCity: String = Constant.strings.defaultCity
     @State private var countries = CitiesObject()
     @State private var country: Country?
-    @State private var countryName: String = "Bahrain"
+    @State private var countryName: String = Constant.strings.defaultCountry
     @State private var timezone: Int = 0
     @State private var isLoading: Bool = true
     @State private var spinner: UIActivityIndicatorView?
     @State private var statusImage: String = ""
     @State private var isConnected: Bool = true
     @State private var state: String = ""
+    private var client = WeatherClient.shared
     var body: some View {
         NavigationView {
             if !isConnected {
                 VStack {
-                    ErrorView(image: "warning", text: "Please check connection")
+                    ErrorView(image: Constant.strings.warningImage, text: Constant.strings.checkConnection)
                         Button(action: {
                            checkNetwork()
                         }) {
-                            WeatherButton(title: "Try again",
+                            WeatherButton(title: Constant.strings.tryAgain,
                                           textColor: .white,
                                           backgroundColor: .gray)
                         }.padding(.top, -350)
@@ -51,7 +52,7 @@ struct ContentView: View {
                             
                         VStack {
                             let imageName = statusImage
-                            CityTextView(cityName: selectedCountry)
+                            CityTextView(cityName: selectedCity)
                             Text(countryName)
                                 .padding(.top, -25)
                                 .font(.system(size: 18, weight: .medium, design: .default))
@@ -63,21 +64,21 @@ struct ContentView: View {
                                 
                             .padding(.bottom, 40)
                             HStack(spacing: 20) {
-                                WeatherDayView(title: "Feels Like",
+                                WeatherDayView(title: Constant.strings.feelsLike,
                                                description: "\(weather?.feelsLike ?? 0)°")
                                 
-                                WeatherDayView(title: "Humidity",
+                                WeatherDayView(title: Constant.strings.humidity,
                                                description: "\(weather?.humidity ?? 0)%")
                                 
-                                WeatherDayView(title: "Pressure",
+                                WeatherDayView(title: Constant.strings.pressure,
                                                description: "\(weather?.pressure ?? 0) hPa")
                                 
                             }
                             Spacer()
                             
-                            NavigationLink(destination: ListView(showDetail: $showDetail, selectedCountry: $selectedCountry, isLoading: $isLoading), isActive: $showDetail) {
+                            NavigationLink(destination: ListView(showDetail: $showDetail, selectedCity: $selectedCity, isLoading: $isLoading), isActive: $showDetail) {
                                 let textColor: Color = isNight ? .black : .blue
-                                WeatherButton(title: "Change City",
+                                WeatherButton(title: Constant.strings.changeCity,
                                               textColor: textColor,
                                               backgroundColor: .white)
                             }
@@ -95,46 +96,30 @@ struct ContentView: View {
     }
     
     func loadData() {
-        guard let url = URL(string: Constant.shared.getUrl(for: selectedCountry)), isLoading else { return }
-        let request = URLRequest(url: url)
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let data = data {
-                if let object = try? JSONDecoder().decode(WeatherObject.self, from: data) {
-                    DispatchQueue.main.async {
-                        self.weather = object.weather
-                        self.country = object.country
-                        self.timezone = object.timezone ?? 0
-                        if let countryName = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: object.country?.country ?? "") {
-                            self.countryName = countryName
-                            self.isLoading = false
-                            self.state = object.status?.first?.main ?? ""
-                            self.getLocal()
+        guard isLoading else { return }
+        client.loadWeatherData(for: selectedCity) { (object, eror) in
+            DispatchQueue.main.async {
+                self.weather = object?.weather
+                self.country = object?.country
+                self.timezone = object?.timezone ?? 0
+                let countryCode = object?.country?.country ?? ""
+                if let countryName = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: countryCode) {
+                    self.countryName = countryName
+                    self.isLoading = false
+                    self.state = object?.status?.first?.main ?? ""
+                    self.getLocal()
 
-                        }
-                        
-                    }
-                    return
                 }
+                
             }
-        }.resume()
+        }
     }
     
     
     func getLocal() {
-        let timezone = TimeZone(secondsFromGMT: self.timezone)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        dateFormatter.timeZone = timezone
-        dateFormatter.timeStyle = .full
-        let date = dateFormatter.string(from: Date())
-        let dateAsString = date.formattedDate
-        dateFormatter.dateFormat = "h:mm a"
-        let formattedDate = dateFormatter.date(from: dateAsString)
-        dateFormatter.dateFormat = "HH:mm"
-        let date24 = dateFormatter.string(from: formattedDate ?? Date())
-        let hour = Int(date24.hour) ?? 0
+        let hour = Constant.shared.getLocal(from: self.timezone)
         switch hour {
-        case 5...18:
+        case 5...17:
             self.isNight = false
         default:
             self.isNight = true
@@ -145,7 +130,7 @@ struct ContentView: View {
     func checkNetwork()  {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
-        isConnected = path.status == .satisfied
+            isConnected = path.status == .satisfied
         }
         
         let queue = DispatchQueue(label: "Monitor")
