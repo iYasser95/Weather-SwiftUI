@@ -8,7 +8,7 @@
 import SwiftUI
 struct Row: View {
     @Binding var showSelf: Bool
-    @Binding var selectedCountry: String
+    @Binding var selectedCity: String
     @State private var countryList = CitiesObject()
     @Binding var searchText: String
     @Binding var isLoading: Bool
@@ -18,7 +18,7 @@ struct Row: View {
             Button(action: {
                 self.isLoading = true
                 self.showSelf = false
-                self.selectedCountry = country.name ?? ""
+                self.selectedCity = country.name ?? ""
             }) {
                 
                 VStack() {
@@ -37,14 +37,12 @@ struct Row: View {
     
     
     func getAllCities() {
-        let url = Bundle.main.url(forResource: "data", withExtension: "json")!
-        do {
-            let data = try Data(contentsOf: url)
-            if let object = try? JSONDecoder().decode(CitiesObject.self, from: data) {
-                self.countryList = object.filter { !($0.name?.contains(" ") ?? false) && !($0.name?.contains("$") ?? false)}
+        WeatherClient.shared.getAllCities { (object, error) in
+            guard let list = object, error == nil else {
+                return
             }
-        }catch {
-            print(error)
+            
+            self.countryList = list.filter { !($0.name?.contains(" ") ?? false) && !($0.name?.contains("$") ?? false)}
         }
     }
 }

@@ -8,31 +8,39 @@
 import SwiftUI
 struct ListView: View {
     @Binding var showDetail: Bool
-    @Binding var selectedCountry: String
-    @State private var country: CitiesObject = Constant.shared.getAllCities()
+    @Binding var selectedCity: String
+    @State private var country = CitiesObject()
     @State var searchText: String = ""
     @State var isEmpty: Bool = true
     @Binding var isLoading: Bool
     var body: some View {
         VStack {
-            TextField("Please Enter City Name", text: $searchText)
+            TextField(Constant.strings.enterCity, text: $searchText)
                 .padding(7)
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
                 .padding([.leading, .trailing], 15)
             HStack {
                 if searchText.isEmpty || country.filter { ($0.name?.contains(searchText) ?? false)}.isEmpty {
-                    ErrorView(image: "warning", text: "Sorry, no search results")
-                        .navigationTitle("Search a City")
+                    ErrorView(image: Constant.strings.warningImage, text: Constant.strings.noSearchResults)
+                        .navigationTitle(Constant.strings.searchCity)
                 }else {
-                    Row(showSelf: $showDetail, selectedCountry: $selectedCountry, searchText: $searchText, isLoading: $isLoading)
-                            .navigationTitle("Choose a City")
+                    Row(showSelf: $showDetail, selectedCity: $selectedCity, searchText: $searchText, isLoading: $isLoading)
+                            .navigationTitle(Constant.strings.searchCity)
                 }
 
             }.background(Color.clear)
-        }
-
+        }.onAppear(perform: getAllCities)            
+    }
+    
+    func getAllCities() {
+        WeatherClient.shared.getAllCities { (object, error) in
+            guard let list = object, error == nil else {
+                return
+            }
             
+            self.country = list.filter { !($0.name?.contains(" ") ?? false) && !($0.name?.contains("$") ?? false)}
+        }
     }
     
     func checkSearch() {

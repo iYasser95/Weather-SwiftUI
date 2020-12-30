@@ -9,28 +9,30 @@ import Foundation
 import Network
 class Constant {
     static let shared = Constant()
-     var url = "https://api.openweathermap.org/data/2.5/weather?q=Kuwait&appid=0173d4ad7d634420fe2a187a24469a93&units=metric"
-     func getUrl(for country: String) -> String {
-        let url = "https://api.openweathermap.org/data/2.5/weather?q=\(country)&appid=0173d4ad7d634420fe2a187a24469a93&units=metric"
-        return url
+    static let strings = Strings()
+    // MARK: - Strings
+    struct Strings {
+        let defaultCity = "Manama"
+        let defaultCountry = "Bahrain"
+        let loading = "Fetching Weather data..."
+        let noSearchResults = "Sorry, no search results"
+        let searchCity = "Search a City"
+        let enterCity = "Please Enter City Name"
+        let checkConnection = "Please check connection"
+        let tryAgain = "Try again"
+        let feelsLike = "Feels Like"
+        let humidity = "Humidity"
+        let pressure = "Pressure"
+        let changeCity = "Change City"
+        let warningImage = "warning"
+        let blueColor = "lightBlue"
     }
     
-     func getAllCities() -> CitiesObject {
-        let url = Bundle.main.url(forResource: "data", withExtension: "json")!
-        do {
-            let data = try Data(contentsOf: url)
-            if let object = try? JSONDecoder().decode(CitiesObject.self, from: data) {
-                return object.filter { !($0.name?.contains(" ") ?? false) && !($0.name?.contains("$") ?? false)}
-            }
-        }catch {
-            print(error)
-        }
-        
-        return CitiesObject()
-    }
     
     
+    // MARK: - Functions
     func getStatusImage(from string: String, isNight: Bool) -> String {
+        // Get weather image depending on the status (rain, cloud, snow, etc..)
         let status = string.lowercased()
         var image: String = ""
         switch status {
@@ -47,5 +49,22 @@ class Constant {
         }
         
         return image
+    }
+    
+    func getLocal(from time: Int) -> Int {
+        // Get 'hour of the day (24)' depending on the selected city.
+        let timezone = TimeZone(secondsFromGMT: time)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.timeZone = timezone
+        dateFormatter.timeStyle = .full
+        let date = dateFormatter.string(from: Date())
+        let dateAsString = date.formattedDate
+        dateFormatter.dateFormat = "h:mm a"
+        let formattedDate = dateFormatter.date(from: dateAsString)
+        dateFormatter.dateFormat = "HH:mm"
+        let date24 = dateFormatter.string(from: formattedDate ?? Date())
+        let hour = Int(date24.hour) ?? 0
+        return hour
     }
 }
